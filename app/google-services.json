@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "223256538535",
+    "firebase_url": "https://blogu-e723a.firebaseio.com",
+    "project_id": "blogu-e723a",
+    "storage_bucket": "blogu-e723a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:223256538535:android:6ed0c80615d45a3d",
+        "android_client_info": {
+          "package_name": "com.kens.blogu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "223256538535-lug7jrtsvvcr14dgges2v1itk8c9abk3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kens.blogu",
+            "certificate_hash": "9c36dab87914aa2a04f691a7649c08448bfd8552"
+          }
+        },
+        {
+          "client_id": "223256538535-g2kefscofemgqfsf9j6tb98p0p8qn2mi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGhO8a0JLwOu1GzFGPVrDhjZwfaqgCuSk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "223256538535-g2kefscofemgqfsf9j6tb98p0p8qn2mi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
