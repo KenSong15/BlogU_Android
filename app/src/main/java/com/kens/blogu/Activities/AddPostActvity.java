@@ -1,10 +1,14 @@
 package com.kens.blogu.Activities;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +20,14 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.kens.blogu.Model.Blog;
 import com.kens.blogu.R;
 
 public class AddPostActvity extends AppCompatActivity {
@@ -35,7 +42,10 @@ public class AddPostActvity extends AppCompatActivity {
     private FirebaseUser afbDBUser;
 
     //progressDialog is not supported by API28 anymore
-    //private ProgressBar aProgressBar;
+    private ProgressBar progressBar;
+
+    private static final int GALLERY_CODE = 1;
+    private Uri imageUri; //image uri to image
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +61,9 @@ public class AddPostActvity extends AppCompatActivity {
         aPostTitle = (EditText) findViewById(R.id.postTitleET);
         aPostDesc = (EditText) findViewById(R.id.postDesET);
         aAddButton = (Button) findViewById(R.id.submitPost);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        progressBar.setVisibility(View.INVISIBLE);
 
         aAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,64 +73,56 @@ public class AddPostActvity extends AppCompatActivity {
             }
         });
 
+        aImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                galleryIntent.setType("image/*");
+                startActivityForResult(galleryIntent,GALLERY_CODE);
+
+            }
+        });
+
     }
 
-    public void setProgressDialog() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        int llPadding = 30;
-        LinearLayout ll = new LinearLayout(this);
-        ll.setOrientation(LinearLayout.HORIZONTAL);
-        ll.setPadding(llPadding, llPadding, llPadding, llPadding);
-        ll.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams llParam = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        llParam.gravity = Gravity.CENTER;
-        ll.setLayoutParams(llParam);
+        if(requestCode == GALLERY_CODE && resultCode == RESULT_OK)/*everything ok*/{
 
-        ProgressBar progressBar = new ProgressBar(this);
-        progressBar.setIndeterminate(true);
-        progressBar.setPadding(0, 0, llPadding, 0);
-        progressBar.setLayoutParams(llParam);
+            imageUri = data.getData();
+            aImageButton.setImageURI(imageUri);
 
-        llParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        llParam.gravity = Gravity.CENTER;
-        TextView tvText = new TextView(this);
-        tvText.setText("Loading ...");
-        tvText.setTextColor(Color.parseColor("#000000"));
-        tvText.setTextSize(20);
-        tvText.setLayoutParams(llParam);
 
-        ll.addView(progressBar);
-        ll.addView(tvText);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(true);
-        builder.setView(ll);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        Window window = dialog.getWindow();
-        if (window != null) {
-            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-            layoutParams.copyFrom(dialog.getWindow().getAttributes());
-            layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT;
-            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setAttributes(layoutParams);
         }
     }
 
     private void startPosting() {
 
         //this is an alternative way to set the progress dialog
-        setProgressDialog();
+        //setProgressDialog();
+        progressBar.setVisibility(View.VISIBLE);
+
 
         String titleVal = aPostTitle.getText().toString().trim();
         String descVal = aPostDesc.getText().toString().trim();
 
         if(!TextUtils.isEmpty(titleVal) && !TextUtils.isEmpty(descVal)){
             //start the uploading
+
+
+            Blog blog = new Blog("title", "description",
+                    "imageUrl", "timestamp", "user1");
+
+            aDBReference.setValue(blog).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(getApplicationContext(), "item added", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            });
+
         }
     }
 }
