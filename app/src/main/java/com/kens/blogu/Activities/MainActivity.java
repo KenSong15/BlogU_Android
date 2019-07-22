@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if(fbUser != null){
                     Toast.makeText(MainActivity.this, "signed in", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(MainActivity.this, PostListActivity.class));
                 } else {
                     Toast.makeText(MainActivity.this, "not signed in", Toast.LENGTH_SHORT).show();
 

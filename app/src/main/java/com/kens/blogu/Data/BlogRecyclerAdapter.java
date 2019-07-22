@@ -48,7 +48,9 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         String formattedDate = dateFormat.format(new Date(Long.valueOf(blog.getTimestamp())).getTime());
 
         viewHolder.timestamp.setText(formattedDate);
+
         imageUrl = blog.getImage();
+        //todo: use picasso to load the image
     }
 
     @Override
