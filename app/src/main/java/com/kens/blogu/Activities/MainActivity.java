@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 if(fbUser != null){
                     Toast.makeText(MainActivity.this, "signed in", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(MainActivity.this, PostListActivity.class));
+                    finish();
                 } else {
                     Toast.makeText(MainActivity.this, "not signed in", Toast.LENGTH_SHORT).show();
 
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "we are in~", Toast.LENGTH_SHORT).show();
 
                             startActivity(new Intent(MainActivity.this, PostListActivity.class));
+                            finish();
                         } else {
                             Toast.makeText(MainActivity.this, "is not in...", Toast.LENGTH_SHORT).show();
 
