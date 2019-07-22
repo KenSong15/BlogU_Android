@@ -23,12 +23,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.kens.blogu.Model.Blog;
 import com.kens.blogu.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddPostActvity extends AppCompatActivity {
 
@@ -37,9 +44,11 @@ public class AddPostActvity extends AppCompatActivity {
     private EditText aPostDesc;
     private Button aAddButton;
 
-    private DatabaseReference aDBReference;
-    private FirebaseAuth afbAuth;
-    private FirebaseUser afbDBUser;
+    private DatabaseReference DBReference;
+    private FirebaseAuth DBAuth;
+    private FirebaseUser DBUser;
+
+    private StorageReference mStorage;
 
     //progressDialog is not supported by API28 anymore
     private ProgressBar progressBar;
@@ -52,10 +61,12 @@ public class AddPostActvity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_post_actvity);
 
-        afbAuth = FirebaseAuth.getInstance();
-        afbDBUser = afbAuth.getCurrentUser();
+        DBAuth = FirebaseAuth.getInstance();
+        DBUser = DBAuth.getCurrentUser();
 
-        aDBReference = FirebaseDatabase.getInstance().getReference().child("BlogU");
+        mStorage = FirebaseStorage.getInstance().getReference();
+
+        DBReference = FirebaseDatabase.getInstance().getReference().child("BlogU");
 
         aImageButton = (ImageButton)  findViewById(R.id.imageButton);
         aPostTitle = (EditText) findViewById(R.id.postTitleET);
@@ -105,23 +116,56 @@ public class AddPostActvity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
 
-        String titleVal = aPostTitle.getText().toString().trim();
-        String descVal = aPostDesc.getText().toString().trim();
+        final String titleVal = aPostTitle.getText().toString().trim();
+        final String descVal = aPostDesc.getText().toString().trim();
 
-        if(!TextUtils.isEmpty(titleVal) && !TextUtils.isEmpty(descVal)){
+        if(!TextUtils.isEmpty(titleVal) && !TextUtils.isEmpty(descVal) &&
+                imageUri != null){
             //start the uploading
 
-
-            Blog blog = new Blog("title", "description",
-                    "imageUrl", "timestamp", "user1");
-
-            aDBReference.setValue(blog).addOnSuccessListener(new OnSuccessListener<Void>() {
+            StorageReference filePath = mStorage.child("BlogU_Image").
+                    child(imageUri.getLastPathSegment());
+            filePath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
-                public void onSuccess(Void aVoid) {
-                    Toast.makeText(getApplicationContext(), "item added", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.INVISIBLE);
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+
+                    Task<Uri> Uri1 = taskSnapshot.getStorage().getDownloadUrl();
+                    while(!Uri1.isComplete()); //what is this....
+                    Uri downloadurl = Uri1.getResult();
+
+                    DatabaseReference newPost = DBReference.push();
+
+                    Map<String, String> dataToSave = new HashMap<>();
+
+                    dataToSave.put("title", titleVal);
+                    dataToSave.put("desc", descVal);
+                    dataToSave.put("image", downloadurl.toString());
+                    dataToSave.put("timestamp", String.valueOf(java.lang.System.currentTimeMillis()));
+                    dataToSave.put("userid", DBUser.getUid());
+
+//                    //the olf way to storage
+//                    newPost.child("title").setValue(titleVal);
+//                    newPost.child("desc").setValue(descVal);
+//                    newPost.child("image").setValue(downloadurl.toString());
+//                    newPost.child("timestamp").setValue(java.lang.System.currentTimeMillis());
+
+                    newPost.setValue(dataToSave);
+                    progressBar.setVisibility(View.INVISIBLE); //turn off the progress bar
                 }
             });
+
+//             //testing the put on storage functionality
+//            Blog blog = new Blog("title", "description",
+//                    "imageUrl", "timestamp", "user1");
+//
+//            DBReference.setValue(blog).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                @Override
+//                public void onSuccess(Void aVoid) {
+//                    Toast.makeText(getApplicationContext(), "item added", Toast.LENGTH_SHORT).show();
+//                    progressBar.setVisibility(View.INVISIBLE);
+//                }
+//            });
 
         }
     }
