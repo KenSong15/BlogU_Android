@@ -1,4 +1,4 @@
-package com.kens.blogu;
+package com.kens.blogu.Activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.kens.blogu.R;
 
 public class MainActivity extends AppCompatActivity {
 
