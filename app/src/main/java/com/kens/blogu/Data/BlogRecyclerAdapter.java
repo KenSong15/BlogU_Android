@@ -11,9 +11,13 @@ import android.widget.TextView;
 
 import com.kens.blogu.Model.Blog;
 import com.kens.blogu.R;
+import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+
+import static java.lang.System.load;
 
 public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapter.ViewHolder> {
 
@@ -44,13 +48,15 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         viewHolder.title.setText(blog.getTitle());
         viewHolder.desc.setText(blog.getDesc());
 
-        java.text.DateFormat dateFormat = java.text.DateFormat.getDateInstance();
+        DateFormat dateFormat = DateFormat.getDateInstance();
         String formattedDate = dateFormat.format(new Date(Long.valueOf(blog.getTimestamp())).getTime());
 
         viewHolder.timestamp.setText(formattedDate);
 
         imageUrl = blog.getImage();
-        //todo: use picasso to load the image
+
+        Picasso.with(context).load(imageUrl).into(viewHolder.image);
+
     }
 
     @Override

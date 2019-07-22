@@ -152,6 +152,9 @@ public class AddPostActvity extends AppCompatActivity {
 
                     newPost.setValue(dataToSave);
                     progressBar.setVisibility(View.INVISIBLE); //turn off the progress bar
+
+                    startActivity(new Intent(AddPostActvity.this, PostListActivity.class));
+                    finish();
                 }
             });
 
