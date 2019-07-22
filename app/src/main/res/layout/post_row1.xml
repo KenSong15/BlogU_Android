@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/postImageList"
+        android:adjustViewBounds="true"
+        android:cropToPadding="false"
+        android:src="@color/common_google_signin_btn_text_dark_disabled"
+        android:scaleType="centerCrop"
+        android:padding="15dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/postTitleList"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="15dp"
+        android:text="Post title"
+        android:layout_below="@id/postImageList"
+        android:layout_alignLeft="@id/postImageList"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/postTextList"
+        android:textSize="15sp"
+        android:padding="15dp"
+        android:text="Post title"
+        android:layout_below="@id/postTitleList"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/postTimeList"
+        android:textSize="15sp"
+        android:padding="15dp"
+        android:text="Post title"
+        android:layout_below="@id/postTextList"/>
+</RelativeLayout>
