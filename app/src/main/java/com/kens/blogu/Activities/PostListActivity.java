@@ -22,6 +22,7 @@ import com.kens.blogu.Model.Blog;
 import com.kens.blogu.R;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class PostListActivity extends AppCompatActivity {
@@ -94,6 +95,9 @@ public class PostListActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Blog blog = dataSnapshot.getValue(Blog.class);
                 blogList.add(blog);
+
+                //reverse order
+                //Collection.reverse(blogList);
 
                 blogRecyclerAdapter = new BlogRecyclerAdapter(PostListActivity.this, blogList);
                 recyclerView.setAdapter(blogRecyclerAdapter);
